@@ -1,0 +1,24 @@
+import './globals.css';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Telegraph — soft, fast media hosting',
+    description: 'Scalable, edge-based image hosting system that minimizes server bandwidth by redirecting directly to distributed storage infrastructure.',
+};
+
+import { Analytics } from "@vercel/analytics/react"
+
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="en">
+            <body>
+                {children}
+                <Analytics />
+            </body>
+        </html>
+    );
+}
