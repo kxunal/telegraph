@@ -430,7 +430,7 @@ export async function GET(
             );
         }
 
-        const ext = record.metadata?.type?.startsWith('video/') ? '.mp4' : record.metadata?.type?.startsWith('text/') ? '.txt' : '.jpg';
+        const ext = record.metadata?.type?.startsWith('video/') ? '.mp4' : record.metadata?.type?.startsWith('audio/') ? '.m4a' : record.metadata?.type?.startsWith('text/') ? '.txt' : '.jpg';
         const proxiedImgSrc = `/i/${id}${ext}`;
         const formattedDate = new Date(record.created_at).toLocaleDateString();
         const formattedSize = record.metadata?.size ? (record.metadata.size / 1024 / 1024).toFixed(2) + ' MB' : 'Unknown';
@@ -448,6 +448,10 @@ export async function GET(
                    <meta property="og:video:type" content="${record.metadata.type}">
                    <meta property="og:video:width" content="1280">
                    <meta property="og:video:height" content="720">`
+                : record.metadata?.type?.startsWith('audio/')
+                ? `<meta property="og:type" content="music.song">
+                   <meta property="og:audio" content="${proxiedImgSrc}">
+                   <meta property="og:audio:type" content="${record.metadata.type}">`
                 : `<meta property="og:type" content="website">
                    <meta property="og:image" content="${proxiedImgSrc}">`
             }
@@ -475,8 +479,8 @@ export async function GET(
                         from { opacity: 0; transform: translateY(15px); }
                         to { opacity: 1; transform: translateY(0); }
                     }
-                    img, video { max-width: 100%; max-height: 80vh; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(15, 23, 42, 0.1); object-fit: contain; transition: transform 0.3s ease; }
-                    img:hover, video:hover { transform: scale(1.01); box-shadow: 0 24px 48px rgba(0,0,0,0.12); }
+                    img, video, audio { max-width: 100%; max-height: 80vh; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(15, 23, 42, 0.1); object-fit: contain; transition: transform 0.3s ease; }
+                    img:hover, video:hover, audio:hover { transform: scale(1.01); box-shadow: 0 24px 48px rgba(0,0,0,0.12); }
                     .toolbar { 
                         position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
                         display: flex; gap: 15px; z-index: 100;
@@ -507,6 +511,8 @@ export async function GET(
                 <div class="container">
                     ${record.metadata?.type?.startsWith('video/')
                 ? `<video src="${proxiedImgSrc}" autoplay loop muted playsinline controls></video>`
+                : record.metadata?.type?.startsWith('audio/')
+                ? `<audio src="${proxiedImgSrc}" controls></audio>`
                 : `<img src="${proxiedImgSrc}" alt="Image">`
             }
                 </div>
