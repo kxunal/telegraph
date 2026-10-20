@@ -72,9 +72,9 @@ export default function Home() {
             uploadTarget = new File([file], safeName, { type: file.type });
         }
 
-        // Vercel Serverless Function body size limit is 4.5MB
-        if (uploadTarget.size > 4.5 * 1024 * 1024) {
-            alert('File too large. Vercel limits uploads to 4.5MB.');
+        // Max file upload limit: 50MB (Standard Telegram Bot API limit)
+        if (uploadTarget.size > 50 * 1024 * 1024) {
+            alert('File too large. Maximum upload size is 50MB.');
             return;
         }
 
@@ -95,7 +95,7 @@ export default function Home() {
             });
 
             if (response.status === 413) {
-                throw new Error('File too large. Vercel serverless limit is 4.5MB.');
+                throw new Error('File too large. Maximum size limit is 50MB.');
             }
 
             let json;
