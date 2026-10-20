@@ -183,11 +183,14 @@ export async function GET(
 
         const proxyImage = async () => {
             const response = await fetch(fileUrl);
-            const blob = await response.blob();
             const headers = new Headers();
-            headers.set('Content-Type', response.headers.get('Content-Type') || 'image/jpeg');
+            const contentType = response.headers.get('Content-Type') || record.metadata?.type || 'application/octet-stream';
+            const contentLength = response.headers.get('Content-Length');
+            
+            headers.set('Content-Type', contentType);
+            if (contentLength) headers.set('Content-Length', contentLength);
             headers.set('Cache-Control', 'public, max-age=31536000, immutable');
-            return new NextResponse(blob, { headers });
+            return new NextResponse(response.body, { headers, status: response.status });
         };
 
         const accept = req.headers.get('accept') || '';
